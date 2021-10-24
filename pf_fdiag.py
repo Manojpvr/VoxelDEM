@@ -6,7 +6,7 @@ Created on Wed Jul  7 14:53:31 2021
 """
 import numpy as np
 from matplotlib import pyplot as plt
-import get_pd_dis as gpd
+import arb_plane_pf as apf
 import matplotlib
 matplotlib.use('agg')
 
@@ -50,7 +50,7 @@ x = -0.012
 y = -0.012
 while x <= 0.012:
     point = [x,y,(zmin+zmax)/2]
-    pf = gpd.pd_arb(point,normal,voxel,vd,xmin,xmax,ymin,ymax,zmin,zmax)
+    pf = apf.pd_arb(point,normal,voxel,vd,xmin,xmax,ymin,ymax,zmin,zmax)
     diag_dis = np.sqrt((x+0.012)**2 + (y+0.012)**2)
     x_list.append([diag_dis,pf])
     x += (0.024-0.003)/200
