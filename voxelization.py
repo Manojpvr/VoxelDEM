@@ -11,6 +11,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from scipy.spatial.transform import Rotation as R
 from tqdm import tqdm
+from time import time as time
 
 def voxelize_sq_par(par_x,par_y,par_z,q0,q1,q2,q3,a,b,c,n1,n2,voxel_grid,voxel_size,xmin,xmax,ymin,ymax,zmin,zmax):
 
@@ -217,7 +218,14 @@ def import_sq_data(filename,zmax):
     save_to_csv(sq_data, n)
     return(sq_data)
 
-def import_ms_data(filename,n,x,y,z,r,zmax):
+def import_ms_data(filename,ms_config_data_file,zmax):
+    ti = time()
+    ms_config_data = np.genfromtxt(ms_config_data_file, delimiter = ',')
+    n = np.shape(ms_config_data)[0]
+    x = ms_config_data[:,0]
+    y = ms_config_data[:,1]
+    z = ms_config_data[:,2]
+    r = ms_config_data[:,3]
     a = np.genfromtxt(filename, delimiter = ',')
     a = np.transpose(a)
     N = np.shape(a)[0]
@@ -241,6 +249,9 @@ def import_ms_data(filename,n,x,y,z,r,zmax):
             P[n*i+j][1] = a[i][1]+ab[1]
             P[n*i+j][2] = a[i][2]+ab[2]
     np.savetxt('Sphere.csv', P, delimiter=", ")
+    tf = time()
+    time_import = tf-ti
+    print('DEM multisphere data imported in %f seconds'%time_import)
     return(P)
 
 def sq_vox(sq_data,rmin,domain_data,normalized_voxel_size,out_file_name):
