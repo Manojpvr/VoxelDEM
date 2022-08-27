@@ -1,31 +1,44 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue May 18 21:57:10 2021
+Created on Wed Jul 21 15:13:07 2021
 
 @author: pvrma
 """
-import numpy as np
-import time
 import voxelization
 
-par = np.genfromtxt('coffee_sphere_data.csv', delimiter = ',')#importing multi sphere particle data
-"""
-In the above line of code, we are importing the multi-sphere configuration for a particle used in our
-simulation, i.e, what are the locations of the spheres for a multi-sphere particle located at (0,0,0) and at 
-orientation [1,0,0,0]([w,x,y,z]).
-"""
-x = par[:,0]
-y = par[:,1]
-z = par[:,2]
-r = par[:,3]
-n = np.shape(par)[0]
+xmin_domain = -0.0125
+xmax_domain = 0.0125
+ymin_domain = -0.0125
+ymax_domain = 0.0125
+zmin_domain = -0.05
+zmax_domain = -0.001
+
+domain_extents = [xmin_domain,xmax_domain,ymin_domain,ymax_domain,zmin_domain,zmax_domain]
 zmax = -0.003
+
+"""
+zmax refers the maximum height till which the particles to which we need the particles
+to be voxelized, this is lesser the Zmax to avoid the heaping effect, if you do not wish
+to have it, you can make it equal to zmax_domain
+"""
+
+
+par_data = voxelization.import_sq_data('out.csv', zmax)
+
 rmin = 0.0006
-particle_data = voxelization.import_ms_data('ms_coffee_dem_out.csv',n,x,y,z,r,zmax)
 """
-In the above line of code, we are importing the multisphere particles and converting it
-into sphere data using the multisphere configuration obtained previously.
+rmin is the smallest particle dimension in your granular assembly, for superquadric,
+we have A,B,C, i.e, scaling parameters, rmin will be the smallest of A, B, C. If particles
+have different scaling parametes then rmin will be smallest of all of them, you can
+either manually enter it, or find it directly from your particle data.
 """
-normalized_voxel_size = 0.1
-bounding_box = [-0.0125,0.0125,-0.0125,0.0125,-0.05,-0.001]
-P1 = voxelization.ms_vox(particle_data, rmin, bounding_box, normalized_voxel_size, 'coffee_ms')#voxelizing the sphere data.
+
+
+normalised_voxel_size = 0.5
+"""
+normalied voxel size is ratio of the size of the voxel to rmin
+
+i.e, voxel size = rmin*normalised_voxel_size
+"""
+
+voxel = voxelization.sq_vox(par_data,rmin,domain_extents,normalised_voxel_size,'out_sample_name')

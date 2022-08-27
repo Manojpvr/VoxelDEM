@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
+
 """
 Created on Sun Jul 18 08:39:44 2021
-
 @author: pvrma
 """
 import numpy as np
